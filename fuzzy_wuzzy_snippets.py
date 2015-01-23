@@ -88,6 +88,7 @@ Software Engineer->88
 0.9230769230769231
 >>> fuzz.ratio("Data Scientist","Data Analyst")
 62
+<<<<<<< HEAD:fuzzy_quzzy_snippets.py
 
 
 
