@@ -16,7 +16,7 @@ data_array = np.array(cd_list)
 def predictor():
         user_future = raw_input("Enter your future profession : ")
         for i in range(1,data_array.shape[0]):
-                if fuzz.ratio(user_future,data_array[i][9])>50:
+                if fuzz.ratio(user_future,data_array[i][9])>60:
                         print "(Relevance = "+ str(fuzz.ratio(user_future,data_array[i][9])) + ") ",
                         if data_array[i][0] != '':
                                 print "Bachelors : "+ data_array[i][0],
