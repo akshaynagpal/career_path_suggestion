@@ -18,45 +18,76 @@ data_array = array(cd_list)  # making an array from list of lists
 
 def predictor(str1,inp):
     print str1
-    count_result = -1
-    flag = 0
     user_input = inp
     user_future = user_input.title()
     user_output = []
+    count_result = -1
     
-    for i in range(1,data_array.shape[0]):   
-        if fuzz.ratio(user_future,data_array[i][9])>60:
-            print "inside 1st loop "
-            flag = 1
-            count_result += 1
-            user_output.append([count_result])
-            user_output[count_result].append(str(fuzz.ratio(user_future,data_array[i][9])))
-            if data_array[i][0] != '':
-                user_output[count_result].append("Bachelors :" + data_array[i][0])
-            if data_array[i][3] != '':
-                user_output[count_result].append("Masters :" + data_array[i][3])
-            if data_array[i][6] != '':
-                user_output[count_result].append("Doctoral :" + data_array[i][6]) 
-            user_output[count_result].append(data_array[i][9])
-
-            
-    if flag == 0:
-        print "no simple ratio match...trying for partial match..."
-        for i in range(1,data_array.shape[0]):      
-            if fuzz.partial_ratio(user_future,data_array[i][9])>80:
+    if str1 == 'HS':
+        flag = 0
+        for i in range(1,data_array.shape[0]):   
+            if fuzz.ratio(user_future,data_array[i][9])>60:
                 flag = 1
                 count_result += 1
-                user_output.append([count_result])
-                user_output[count_result].append(str(fuzz.partial_ratio(user_future,data_array[i][9])))
+                user_output.append([str(count_result)])
+                user_output[count_result].append(str(fuzz.ratio(user_future,data_array[i][9])))
                 if data_array[i][0] != '':
                     user_output[count_result].append("Bachelors :" + data_array[i][0])
                 if data_array[i][3] != '':
                     user_output[count_result].append("Masters :" + data_array[i][3])
                 if data_array[i][6] != '':
-                    user_output[count_result].append("Doctoral :" + data_array[i][6])
+                    user_output[count_result].append("Doctoral :" + data_array[i][6]) 
                 user_output[count_result].append(data_array[i][9])
                 
-    return user_output
+        if flag == 0: #No simple ratio match, try partial match
+            print "No simple ratio match...trying for partial match..."
+            for i in range(1,data_array.shape[0]):      
+                if fuzz.partial_ratio(user_future,data_array[i][9])>80:
+                    flag = 1
+                    count_result += 1
+                    user_output.append([str(count_result)])
+                    user_output[count_result].append(str(fuzz.partial_ratio(user_future,data_array[i][9])))
+                    if data_array[i][0] != '':
+                        user_output[count_result].append("Bachelors :" + data_array[i][0])
+                    if data_array[i][3] != '':
+                        user_output[count_result].append("Masters :" + data_array[i][3])
+                    if data_array[i][6] != '':
+                        user_output[count_result].append("Doctoral :" + data_array[i][6])
+                    user_output[count_result].append(data_array[i][9])
+                    
+        return user_output
+    
+    elif str1 == 'B': #Bachelors selected
+        flag = 0
+        for i in range(1,data_array.shape[0]):   
+            if fuzz.ratio(user_future,data_array[i][9])>60: #relevance > 60
+                print "inside 1st loop "
+                flag = 1
+                count_result += 1
+                user_output.append([str(count_result)])
+                user_output[count_result].append("Relevance:" + str(fuzz.ratio(user_future,data_array[i][9])))
+                if data_array[i][3] != '':
+                    user_output[count_result].append("Masters :" + data_array[i][3])
+                if data_array[i][6] != '':
+                    user_output[count_result].append("Doctoral :" + data_array[i][6]) 
+                user_output[count_result].append(data_array[i][9])
+                
+        if flag == 0:
+            print "no simple ratio match...trying for partial match..."
+            for i in range(1,data_array.shape[0]):      
+                if fuzz.partial_ratio(user_future,data_array[i][9])>80: #partial relevance > 80
+                    flag = 1
+                    count_result += 1
+                    user_output.append([str(count_result)])
+                    user_output[count_result].append("Relevance:"+str(fuzz.partial_ratio(user_future,data_array[i][9])))
+                    if data_array[i][3] != '':
+                        user_output[count_result].append("Masters :" + data_array[i][3])
+                    if data_array[i][6] != '':
+                        user_output[count_result].append("Doctoral :" + data_array[i][6])
+                    user_output[count_result].append(data_array[i][9])
+                    
+        return user_output
+        
 
 def help_callback():
     tkMessageBox.showinfo(
@@ -69,20 +100,18 @@ def callback():
     if str(listbox1.curselection()) == str(('0',)):
         print "Zero Selected"
         text_box_input = str(e.get())
-        print text_box_input
         x = predictor('HS',text_box_input)
         tkMessageBox.showinfo(
         "RESULT",
-        "" + str(x)
+        '\n'.join(map('->'.join, x))
         )
     elif str(listbox1.curselection()) == str(('1',)):
         print "ONE SELECTED"
         text_box_input = str(e.get())
-        print text_box_input
-        x = predictor('Bachelors',text_box_input)
+        x = predictor('B',text_box_input)
         tkMessageBox.showinfo(
         "RESULT",
-        "" + str(x)
+        '\n'.join(map('->'.join, x))
         )
     return
 
