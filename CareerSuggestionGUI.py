@@ -117,10 +117,11 @@ def callback():
 
 
 root = Tk()
-
+root.wm_title("Career Suggestion")
+root.geometry("250x250")  #width x height
 #creating menu
-
 menu = Menu(root)
+
 root.config(menu=menu)
 helpmenu=Menu(menu)
 menu.add_cascade(label="Help",menu=helpmenu)
@@ -128,18 +129,18 @@ helpmenu.add_command(label="Help",command=help_callback)
 
 frame = Frame(root, width=100, height=100)
 w = Label(root,text = "Enter your target profession:")
-w.pack()
+w.pack(fill=X)
 e = Entry(root)
-e.pack()
+e.pack(fill=X)
 
 w0 = Label(root,text = "Select your current education:")
-w0.pack()
+w0.pack(fill=X)
 listbox1 = Listbox(root)
-listbox1.pack()
+listbox1.pack(fill=X)
 listbox1.insert(END,"High School")
 listbox1.insert(END,"Bachelors")
 
 b = Button(root,text="get",width=10,command=callback)
-b.pack()
+b.pack(fill=X)
 
 root.mainloop()
