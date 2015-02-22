@@ -23,7 +23,7 @@ def predictor(str1,inp):
     user_output = []
     count_result = -1
     
-    if str1 == 'HS':
+    if str1 == 'HS': #high school selected
         flag = 0
         for i in range(1,data_array.shape[0]):   
             if fuzz.ratio(user_future,data_array[i][9])>60:
@@ -61,7 +61,6 @@ def predictor(str1,inp):
         flag = 0
         for i in range(1,data_array.shape[0]):   
             if fuzz.ratio(user_future,data_array[i][9])>60: #relevance > 60
-                print "inside 1st loop "
                 flag = 1
                 count_result += 1
                 user_output.append([str(count_result)])
@@ -101,6 +100,7 @@ def callback():
         print "Zero Selected"
         text_box_input = str(e.get())
         x = predictor('HS',text_box_input)
+        x.sort(key = lambda x : x[1],reverse=True)
         tkMessageBox.showinfo(
         "RESULT",
         '\n'.join(map('->'.join, x))
@@ -109,6 +109,7 @@ def callback():
         print "ONE SELECTED"
         text_box_input = str(e.get())
         x = predictor('B',text_box_input)
+        x.sort(key = lambda x : x[1],reverse=True)
         tkMessageBox.showinfo(
         "RESULT",
         '\n'.join(map('->'.join, x))
