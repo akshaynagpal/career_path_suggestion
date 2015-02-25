@@ -17,19 +17,19 @@ with open("C:\/Users\/advance\/Documents\/GitHub\/career_path_prediction\/Career
 data_array = array(cd_list)  # making an array from list of lists
 
 def predictor(str1,inp):
-    print str1
+    # print str1
     user_input = inp
     user_future = user_input.title()
     user_output = []
     count_result = -1
     
-    if str1 == 'HS': #high school selected
+    if str1 == 'HS': # high school selected
         flag = 0
         for i in range(1,data_array.shape[0]):   
             if fuzz.ratio(user_future,data_array[i][9])>60:
                 flag = 1
                 count_result += 1
-                user_output.append([str(count_result)])
+                user_output.append(["Result "+ str(count_result + 1)])
                 user_output[count_result].append(str(fuzz.ratio(user_future,data_array[i][9])))
                 if data_array[i][0] != '':
                     user_output[count_result].append("Bachelors :" + data_array[i][0])
@@ -39,13 +39,13 @@ def predictor(str1,inp):
                     user_output[count_result].append("Doctoral :" + data_array[i][6]) 
                 user_output[count_result].append(data_array[i][9])
                 
-        if flag == 0: #No simple ratio match, try partial match
+        if flag == 0: # No simple ratio match, try partial match
             print "No simple ratio match...trying for partial match..."
             for i in range(1,data_array.shape[0]):      
                 if fuzz.partial_ratio(user_future,data_array[i][9])>80:
                     flag = 1
                     count_result += 1
-                    user_output.append([str(count_result)])
+                    user_output.append(["Result "+ str(count_result+1)])
                     user_output[count_result].append(str(fuzz.partial_ratio(user_future,data_array[i][9])))
                     if data_array[i][0] != '':
                         user_output[count_result].append("Bachelors :" + data_array[i][0])
@@ -57,32 +57,32 @@ def predictor(str1,inp):
                     
         return user_output
     
-    elif str1 == 'B': #Bachelors selected
+    elif str1 == 'B': # Bachelors selected
         flag = 0
         for i in range(1,data_array.shape[0]):   
-            if fuzz.ratio(user_future,data_array[i][9])>60: #relevance > 60
+            if fuzz.ratio(user_future,data_array[i][9])>60: # relevance > 60
                 flag = 1
                 count_result += 1
-                user_output.append([str(count_result)])
-                user_output[count_result].append("Relevance:" + str(fuzz.ratio(user_future,data_array[i][9])))
+                user_output.append(["Result "+ str(count_result+1)])
+                user_output[count_result].append(str(fuzz.ratio(user_future,data_array[i][9])))
                 if data_array[i][3] != '':
-                    user_output[count_result].append("Masters :" + data_array[i][3])
+                    user_output[count_result].append("Masters: " + data_array[i][3])
                 if data_array[i][6] != '':
-                    user_output[count_result].append("Doctoral :" + data_array[i][6]) 
+                    user_output[count_result].append("Doctoral: " + data_array[i][6]) 
                 user_output[count_result].append(data_array[i][9])
                 
         if flag == 0:
             print "no simple ratio match...trying for partial match..."
             for i in range(1,data_array.shape[0]):      
-                if fuzz.partial_ratio(user_future,data_array[i][9])>80: #partial relevance > 80
+                if fuzz.partial_ratio(user_future,data_array[i][9])>80: # partial relevance > 80
                     flag = 1
                     count_result += 1
-                    user_output.append([str(count_result)])
-                    user_output[count_result].append("Relevance:"+str(fuzz.partial_ratio(user_future,data_array[i][9])))
+                    user_output.append(["Result "+ str(count_result+1)])
+                    user_output[count_result].append(str(fuzz.partial_ratio(user_future,data_array[i][9])))
                     if data_array[i][3] != '':
-                        user_output[count_result].append("Masters :" + data_array[i][3])
+                        user_output[count_result].append("Masters: " + data_array[i][3])
                     if data_array[i][6] != '':
-                        user_output[count_result].append("Doctoral :" + data_array[i][6])
+                        user_output[count_result].append("Doctoral: " + data_array[i][6])
                     user_output[count_result].append(data_array[i][9])
                     
         return user_output
@@ -97,25 +97,40 @@ def help_callback():
 
 def callback():
     if str(listbox1.curselection()) == str(('0',)):
-        print "Zero Selected"
+        print "Event : High school Selected!!"
         text_box_input = str(e.get())
         x = predictor('HS',text_box_input)
-        x.sort(key = lambda x : x[1],reverse=True)
-        tkMessageBox.showinfo(
-        "RESULT",
-        '\n'.join(map('->'.join, x))
-        )
+        #print x
+        x.sort(key = lambda x : int(x[1]),reverse=True)
+        #print x
+        if not x:
+            tkMessageBox.showinfo(
+            "RESULT",
+            '\n Oops! No results found! Try again with a better search keyword!'
+            )
+        else:
+            tkMessageBox.showinfo(
+            "RESULT",
+            '\n'.join(map(' -> '.join, x))
+            )
     elif str(listbox1.curselection()) == str(('1',)):
-        print "ONE SELECTED"
+        print "Event : Bachelor's Selected!!"
         text_box_input = str(e.get())
         x = predictor('B',text_box_input)
-        x.sort(key = lambda x : x[1],reverse=True)
-        tkMessageBox.showinfo(
-        "RESULT",
-        '\n'.join(map('->'.join, x))
-        )
+        #print x
+        x.sort(key = lambda x : int(x[1]),reverse=True)
+        #print x
+        if not x:
+            tkMessageBox.showinfo(
+            "RESULT",
+            '\nOops! No results found! Try again with a better search keyword!'
+            )
+        else:
+            tkMessageBox.showinfo(
+            "RESULT",
+            '\n'.join(map(' -> '.join, x))
+            )
     return
-
 
 root = Tk()
 root.wm_title("Career Suggestion")
@@ -141,7 +156,7 @@ listbox1.pack(fill=X)
 listbox1.insert(END,"High School")
 listbox1.insert(END,"Bachelors")
 
-b = Button(root,text="get",width=10,command=callback)
+b = Button(root,text="Get Career Path",width=10,command=callback)
 b.pack(fill=X)
 
 root.mainloop()
